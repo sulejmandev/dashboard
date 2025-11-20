@@ -1,4 +1,8 @@
+'use client';
+
 import { cn } from '@/lib/utils';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,11 +19,43 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
+import { useState } from 'react';
+import { AuthType, signIn } from '@/app/actions/auth';
+import { userSignInSchema } from '@/lib/validations/userSignIn.schema';
+import { redirect } from 'next/navigation';
+import { toast } from 'sonner';
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  //
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm({
+    resolver: zodResolver(userSignInSchema),
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+
+  const onSubmit = async (data: AuthType) => {
+    setIsLoading(true);
+    try {
+      const result = await signIn(data);
+
+      if (result.user) {
+        toast('Welcome back', { description: 'Login successful' });
+      }
+    } catch (err: any) {
+      setAuthError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+      redirect('/');
+    }
+  };
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -30,11 +66,12 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
+                  {...register('email')}
                   id="email"
                   type="email"
                   placeholder="m@example.com"
@@ -51,10 +88,18 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  {...register('password')}
+                  id="password"
+                  type="password"
+                  required
+                />
+                {authError && <p className="text-red-600">{authError}</p>}
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isLoading || isSubmitting}>
+                  {isLoading || isSubmitting ? 'Loading...' : 'Login'}
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?
                   <Link href="/signup">Sign up</Link>
