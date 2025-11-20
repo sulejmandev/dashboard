@@ -22,6 +22,16 @@ export async function POST(req: Request) {
 
   const product = await Product.create(data);
 
+  if (!product) {
+    return Response.json(
+      {
+        status: 'error',
+        message: 'فشل في إنشاء المنتج',
+      },
+      { status: 500 }
+    );
+  }
+
   return Response.json({
     status: 'success',
     product,
