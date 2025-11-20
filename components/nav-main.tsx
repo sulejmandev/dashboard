@@ -8,8 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 
 export function NavMain({
   items,
@@ -28,6 +27,7 @@ export function NavMain({
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
+              onClick={() => redirect('/products/add-product')}
               tooltip="Quick Create"
               className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
             >
@@ -42,9 +42,14 @@ export function NavMain({
 
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title} isActive={isActive}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={isActive}
+                  onClick={() => redirect(item.url)}
+                  className=" cursor-pointer"
+                >
                   {item.icon && <item.icon />}
-                  <Link href={item.url}>{item.title}</Link>
+                  {item.title}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

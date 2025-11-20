@@ -2,13 +2,24 @@ import { cn } from '@/lib/utils';
 import { SidebarInset, SidebarProvider } from './ui/sidebar';
 import { AppSidebar } from './app-sidebar';
 import { SiteHeader } from './site-header';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 interface LayoutProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export default function Layout({ children, className }: LayoutProps) {
+export default async function Layout({ children, className }: LayoutProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect('/login');
+  }
+
   return (
     <SidebarProvider
       style={

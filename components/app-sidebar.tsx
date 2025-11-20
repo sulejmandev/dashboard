@@ -2,10 +2,7 @@
 
 import * as React from 'react';
 import {
-  IconCamera,
   IconDashboard,
-  IconFileAi,
-  IconFileDescription,
   IconFolder,
   IconInnerShadowTop,
   IconSettings,
@@ -30,7 +27,7 @@ const data = {
   user: {
     name: 'Omar',
     email: 'omart@gamil.com',
-    avatar: '/avatars/shadcn.jpg',
+    avatar: '/avatar.png',
   },
   navMain: [
     {
@@ -49,58 +46,10 @@ const data = {
       icon: IconUsers,
     },
   ],
-  navClouds: [
-    {
-      title: 'Capture',
-      icon: IconCamera,
-      isActive: true,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Proposal',
-      icon: IconFileDescription,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Prompts',
-      icon: IconFileAi,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-  ],
   navSecondary: [
     {
       title: 'Settings',
-      url: '#',
+      url: '/account',
       icon: IconSettings,
     },
   ],
