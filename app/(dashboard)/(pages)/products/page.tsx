@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import CategoriesItem from '@/components/categories-item';
 import { EmptyProducts } from '@/components/empty-products';
 import ProductCard from '@/components/product-card';
