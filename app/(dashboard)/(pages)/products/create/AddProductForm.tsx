@@ -81,10 +81,12 @@ export default function AddProductForm() {
       setFilePreview(undefined);
 
       router.push('/products');
-    } catch (err: any) {
-      toast.error('حدث خطأ أثناء إضافة المنتج', {
-        description: err.message,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error('حدث خطأ أثناء إضافة المنتج', {
+          description: err.message,
+        });
+      }
       setOpenDialog(false);
     }
   }
@@ -173,7 +175,9 @@ export default function AddProductForm() {
                     <Label>الفئة</Label>
                     <Select
                       value={form.watch('category')}
-                      onValueChange={(v) => form.setValue('category', v)}
+                      onValueChange={(v) =>
+                        form.setValue('category', v as ProductType['category'])
+                      }
                     >
                       <SelectTrigger className="h-12 w-60">
                         <SelectValue placeholder="اختر الفئة" />
@@ -195,7 +199,9 @@ export default function AddProductForm() {
                     <Label>الوزن</Label>
                     <Select
                       value={form.watch('weight')}
-                      onValueChange={(v) => form.setValue('weight', v)}
+                      onValueChange={(v) =>
+                        form.setValue('weight', v as ProductType['weight'])
+                      }
                     >
                       <SelectTrigger className="h-12 w-60">
                         <SelectValue placeholder="اختر الوزن" />
