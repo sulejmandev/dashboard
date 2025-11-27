@@ -1,28 +1,32 @@
 import mongoose from 'mongoose';
 
-let isConnected = false; // Track the connection status
+const MONGODB_URL = process.env.DATABASE_URL_MONGODB!;
 
-const dbURL = process.env.DATABASE_URL_MONGODB!;
+if (!MONGODB_URL) {
+  throw new Error('Invalid/Missing environment variable: DATABASE_URL_MONGODB');
+}
+
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+let cached = (global as any).mongoose as MongooseCache;
+
+if (!cached) {
+  cached = (global as any).mongoose = {
+    conn: null,
+    promise: null,
+  };
+}
 
 export async function connectDB() {
-  if (isConnected) {
-    console.log('MongoDB already connected');
-    return;
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URL).then((mongoose) => mongoose);
   }
 
-  if (mongoose.connection.readyState === 1) {
-    console.log('MongoDB already connected (readyState)');
-    isConnected = true;
-    return;
-  }
-
-  try {
-    await mongoose.connect(dbURL);
-    isConnected = true;
-
-    console.log('🔥 MongoDB Connected');
-  } catch (err) {
-    console.error('❌ Error connecting to MongoDB:', err);
-    throw err;
-  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
