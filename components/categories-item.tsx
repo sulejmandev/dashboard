@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { CategorySummaryItem } from '@/types/categoryiesType';
 import { Badge } from './ui/badge';
 import getCategorySummary from '@/hooks/getCategorySummary';

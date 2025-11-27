@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Banknote, Weight } from 'lucide-react';
