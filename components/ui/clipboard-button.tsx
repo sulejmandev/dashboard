@@ -6,14 +6,22 @@ import { Check, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ClipboardButtonProps extends React.ComponentProps<'button'> {
-  value: string;
+  value?: string;
   label?: string;
 }
 
-export function ClipboardButton({ value, ...props }: ClipboardButtonProps) {
+export function ClipboardButton({
+  value = '',
+  ...props
+}: ClipboardButtonProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
+    if (!value) {
+      toast.error('لا يوجد نص لنسخه');
+      return;
+    }
+
     await navigator.clipboard.writeText(value);
 
     setCopied(true);
