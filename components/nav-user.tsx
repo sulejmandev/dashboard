@@ -11,7 +11,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '@/components/ui/sidebar';
 import DropdownUser from './dropdown-user';
 
@@ -24,8 +23,6 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -46,7 +43,7 @@ export function NavUser({
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownUser side={isMobile ? 'bottom' : 'right'} />
+          <DropdownUser />
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
