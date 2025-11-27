@@ -11,22 +11,27 @@ interface MongooseCache {
   promise: Promise<typeof mongoose> | null;
 }
 
-let cached = (global as any).mongoose as MongooseCache;
+declare global {
+  // typed cache on global to survive hot reloads without using `any`
+  var __MONGOOSE_CACHE__: MongooseCache | undefined;
+}
+
+let cached = global.__MONGOOSE_CACHE__ as MongooseCache | undefined;
 
 if (!cached) {
-  cached = (global as any).mongoose = {
+  cached = global.__MONGOOSE_CACHE__ = {
     conn: null,
     promise: null,
   };
 }
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
+  if (cached?.conn) return cached.conn;
 
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URL).then((mongoose) => mongoose);
+  if (!cached!.promise) {
+    cached!.promise = mongoose.connect(MONGODB_URL).then((m) => m);
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  cached!.conn = await cached!.promise;
+  return cached!.conn;
 }
