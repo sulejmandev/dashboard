@@ -2,7 +2,10 @@ export default async function deleteProduct(id: string) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_DELETE_PRODUCT_URL}/${id}`,
-      { cache: 'no-store' }
+      {
+        method: 'DELETE',
+        cache: 'no-store',
+      }
     );
 
     if (!res.ok) {

@@ -5,11 +5,13 @@ import getAllProducts from '@/hooks/getAllProducts';
 import Image from 'next/image';
 import ProductSkeleton from './product-skeleton';
 import { ProductType } from '@/types/productType';
+import { DeleteProduct } from './delete-product';
+import { Button } from './ui/button';
 
 export default async function ProductCard() {
   const { products } = await getAllProducts();
 
-  const isLoading = !products || products.length === 0;
+  const isLoading = !products;
 
   return (
     <div className="flex-1 min-w-0">
@@ -22,7 +24,7 @@ export default async function ProductCard() {
         {!isLoading &&
           products.map((product: ProductType) => (
             <Card
-              key={product.id}
+              key={product.name}
               className="flex flex-col sm:flex-row shadow-none overflow-hidden rounded-md border-none py-0"
             >
               {/* الصورة */}
@@ -36,7 +38,7 @@ export default async function ProductCard() {
               </div>
 
               {/* المحتوى */}
-              <CardContent className="px-0 sm:px-6 py-0 flex flex-col justify-between flex-1 xl:min-w-[600px] max-w-full overflow-hidden">
+              <CardContent className="px-0 sm:px-6 py-0 flex flex-col justify-between flex-1 2xl:min-w-[600px] max-w-full overflow-hidden">
                 <div>
                   <div className="flex items-center gap-6">
                     <Badge className="bg-amber-200/70 text-primary hover:bg-primary/5 shadow-none">
@@ -63,13 +65,13 @@ export default async function ProductCard() {
                 </div>
 
                 <div className="mt-3 flex items-center gap-2">
-                  <button className="px-3 py-1.5 text-sm rounded-md bg-primary/5 text-primary hover:bg-primary/15 transition">
-                    عرض المنتج
-                  </button>
+                  <Button variant="outline">عرض المنتج</Button>
 
-                  <button className="px-3 py-1.5 text-sm rounded-md bg-red-500/10 text-red-600 hover:bg-red-500/20 transition">
+                  {/* <button className="px-3 py-1.5 text-sm rounded-md bg-red-500/10 text-red-600 hover:bg-red-500/20 transition">
                     حذف
-                  </button>
+                  </button> */}
+
+                  <DeleteProduct id={product._id} />
                 </div>
               </CardContent>
             </Card>
