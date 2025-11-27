@@ -13,14 +13,23 @@ import {
 } from '@/components/ui/dialog';
 import deleteProduct from '@/hooks/deleteProduct';
 import { toast } from 'sonner';
-export function DeleteProduct({ id }) {
+
+interface DeleteProductProps {
+  id: string;
+}
+
+export function DeleteProduct({ id }: DeleteProductProps) {
   const handleDelete = async () => {
     try {
       await deleteProduct(id);
-      toast.success('تم حدف المنتج بنجاح');
+      toast.success('تم حذف المنتج بنجاح');
       window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message || 'حدث خطأ أثناء حدف المنتج');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('حدث خطأ أثناء حذف المنتج');
+      }
     }
   };
 

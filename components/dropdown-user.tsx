@@ -10,7 +10,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { signOut } from '@/lib/auth-client';
 import { useLogout } from '@/hooks/useLogout';
 
 interface DropdownUserType {

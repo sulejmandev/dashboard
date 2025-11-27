@@ -27,7 +27,10 @@ export async function ProductCarousel() {
     >
       <CarouselContent>
         {products.map((product, index) => (
-          <CarouselItem key={product.id} className=" md:basis-1/2 lg:basis-1/4">
+          <CarouselItem
+            key={product._id}
+            className=" md:basis-1/2 lg:basis-1/4"
+          >
             <div className="p-1">
               {index === items.length - 1 ? (
                 <div className="flex aspect-square items-center justify-center p-6">
