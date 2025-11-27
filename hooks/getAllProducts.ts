@@ -1,7 +1,9 @@
+import { ProductsResponse } from '@/types/productType';
+
 export default async function getAllProducts(
   page: number = 1,
   limit: number = 5
-) {
+): Promise<ProductsResponse> {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_PRODUCTS_URL}?page=${page}&limit=${limit}`,

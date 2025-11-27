@@ -4,6 +4,7 @@ import { Banknote, Weight } from 'lucide-react';
 import getAllProducts from '@/hooks/getAllProducts';
 import Image from 'next/image';
 import ProductSkeleton from './product-skeleton';
+import { ProductType } from '@/types/productType';
 
 export default async function ProductCard() {
   const { products } = await getAllProducts();
@@ -19,9 +20,9 @@ export default async function ProductCard() {
 
         {/* ---------------- REAL DATA ---------------- */}
         {!isLoading &&
-          products.map((product) => (
+          products.map((product: ProductType) => (
             <Card
-              key={product}
+              key={product.id}
               className="flex flex-col sm:flex-row shadow-none overflow-hidden rounded-md border-none py-0"
             >
               {/* الصورة */}

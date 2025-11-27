@@ -1,3 +1,4 @@
+import { CategorySummaryItem } from '@/types/categoryiesType';
 import { Badge } from './ui/badge';
 import getCategorySummary from '@/hooks/getCategorySummary';
 
@@ -11,7 +12,7 @@ export default async function CategoriesItem() {
         <h3 className="text-xl font-semibold tracking-tight">كل التصنيفات</h3>
       </div>
       <div className="mt-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-        {categorys.map((category, i) => (
+        {categorys.map((category: CategorySummaryItem, i) => (
           <div
             key={i}
             className="flex items-center justify-between gap-2 bg-muted p-3 rounded-md bg-opacity-15 dark:bg-opacity-25"

@@ -2,17 +2,15 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import SidebarHeader from './sidebar-header';
 import BreadCarumbs from './bread-carumbs';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import getServer from '@/lib/getServer';
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
-
+  const session = await getServer();
   if (!session) redirect('/login');
 
   return (
