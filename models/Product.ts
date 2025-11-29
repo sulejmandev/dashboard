@@ -9,11 +9,6 @@ const productSchema = new Schema(
     price: { type: Number, required: true },
     oldPrice: { type: Number, default: null },
     offer: { type: String, default: null },
-    weight: {
-      type: String,
-      enum: ['500', '1000', '250'],
-      default: '500',
-    },
     category: {
       type: String,
       enum: [

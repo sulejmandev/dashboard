@@ -7,7 +7,7 @@ export async function GET(req: Request) {
     await connectDB();
 
     const { searchParams } = new URL(req.url);
-    const category = searchParams.get('category');
+    const category = searchParams.getAll('category');
 
     if (!category)
       return NextResponse.json(
@@ -15,13 +15,23 @@ export async function GET(req: Request) {
         { status: 400 }
       );
 
-    const products = await Product.find({ category });
-
-    return NextResponse.json({
-      total: products.length,
-      category,
-      products,
+    const products = await Product.find({
+      category: { $in: category },
     });
+    return NextResponse.json(
+      {
+        total: products.length,
+        category,
+        products,
+      },
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, ',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (err) {
     return NextResponse.json(
       { error: 'Failed to fetch products', details: err },

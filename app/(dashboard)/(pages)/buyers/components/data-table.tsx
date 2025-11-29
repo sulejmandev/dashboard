@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -12,19 +11,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, Rows2, Rows3, Rows4 } from 'lucide-react';
+import { Rows2, Rows3, Rows4 } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -44,167 +35,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { Columns } from './Columns';
+import { BuyerType } from '@/hooks/getAllBuyers';
 
-const data: Payment[] = [
-  {
-    id: 'm5gr84i9',
-    name: 'NAME',
-    cardNumber: '1234 1233 1234 1234',
-    ExDate: '12/24',
-    cvv: 316,
-    opt: 123,
-  },
-  {
-    id: '3u1reuv4',
-    name: 'NAME',
-    cardNumber: '1235 1233 1234 1234',
-    ExDate: '12/24',
-    cvv: 242,
-    opt: 456,
-  },
-  {
-    id: 'derv1ws0',
-    name: 'NAME',
-    cardNumber: '1234 1233 1234 1234',
-    ExDate: '12/24',
-    cvv: 837,
-    opt: 789,
-  },
-  {
-    id: '5kma53ae',
-    name: 'NAME',
-    cardNumber: '1234 1233 1234 1234',
-    ExDate: '12/24',
-    cvv: 874,
-    opt: 321,
-  },
-  {
-    id: 'bhqecj4p',
-    name: 'NAME',
-    cardNumber: '1234 1233 1234 1234',
-    ExDate: '12/24',
-    cvv: 721,
-    opt: 654,
-  },
-];
-
-export type Payment = {
-  id: string;
-  name: string;
-  cardNumber: string;
-  ExDate: string;
-  cvv: number;
-  opt: number | null;
-};
-
-export const columns: ColumnDef<Payment>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
-  },
-  {
-    accessorKey: 'cardNumber',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Card Number
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('cardNumber')}</div>
-    ),
-  },
-  {
-    accessorKey: 'ExDate',
-    header: () => <div className="text-right">ExDate</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">{row.getValue('ExDate')}</div>
-      );
-    },
-  },
-  {
-    accessorKey: 'cvv',
-    header: () => <div className="text-right">CVV</div>,
-    cell: ({ row }) => {
-      const cvv = parseFloat(row.getValue('cvv'));
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US').format(cvv);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: 'opt',
-    header: () => <div className="text-right">OPT</div>,
-    cell: ({ row }) => {
-      const opt = parseFloat(row.getValue('opt') || '0');
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US').format(opt);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.cardNumber)}
-            >
-              Copy
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View Card</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-export default function DataBuyerTable() {
+export default function DataBuyerTable({ data }: { data: BuyerType[] }) {
   const [density, setDensity] = React.useState<string>();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -216,7 +50,7 @@ export default function DataBuyerTable() {
 
   const table = useReactTable({
     data,
-    columns,
+    columns: Columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -321,7 +155,7 @@ export default function DataBuyerTable() {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={Columns.length}
                   className="h-24 text-center"
                 >
                   No results.

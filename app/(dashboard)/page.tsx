@@ -1,21 +1,24 @@
 import BuyersTable from '@/components/buyer-table';
 import { ProductCarousel } from '@/components/product-carousel';
 import { TotalCard } from '@/components/total-card';
+import getSummaryData from '@/hooks/getSummaryData';
 import { Package, Users } from 'lucide-react';
 
-export default function Home() {
+export default async function Home() {
+  const { totalProducts, totalBuyers } = await getSummaryData();
+
   const data = [
     {
       title: 'Total',
       name: 'Products',
       icon: Package,
-      total: '3',
+      total: totalProducts,
     },
     {
       title: 'Total',
       name: 'Buyer',
       icon: Users,
-      total: '3',
+      total: totalBuyers,
     },
   ];
 
@@ -36,7 +39,7 @@ export default function Home() {
         <div className="w-full flex flex-col lg:flex-row justify-between gap-6 ps-6  sm:pe-16 py-8 bg-muted/50 rounded-xl">
           <div className="text-2xl">Products</div>
           <div className="ps-6 w-full">
-            <ProductCarousel />
+            {totalProducts > 0 && <ProductCarousel />}
           </div>
         </div>
         <BuyersTable />

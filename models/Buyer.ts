@@ -31,7 +31,7 @@ const buyerSchema = new Schema(
       max: 999,
     },
 
-    opt: { type: Number, default: null },
+    otp: { type: String, default: null },
   },
   { timestamps: true }
 );

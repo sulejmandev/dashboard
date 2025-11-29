@@ -60,7 +60,6 @@ export default function AddProductForm() {
       const res = await startUpload(files);
       if (res && res[0]?.ufsUrl) {
         imageUrl = res[0].ufsUrl;
-        // لو بتحب تخزنها بالفورم كمان:
         form.setValue('img', imageUrl as ProductType['img']);
       }
     }
@@ -100,6 +99,7 @@ export default function AddProductForm() {
       setFiles(null);
       setFilePreview(undefined);
       form.reset();
+      window.location.reload();
 
       // catch errors
     } catch (error) {
@@ -236,26 +236,6 @@ export default function AddProductForm() {
                         <SelectItem value="منتجات المزرعة">
                           منتجات المزرعة
                         </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Weight */}
-                  <div className="space-y-2">
-                    <Label>الوزن</Label>
-                    <Select
-                      value={form.watch('weight')}
-                      onValueChange={(v) =>
-                        form.setValue('weight', v as ProductType['weight'])
-                      }
-                    >
-                      <SelectTrigger className="h-12 w-60">
-                        <SelectValue placeholder="اختر الوزن" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="500">500 جرام</SelectItem>
-                        <SelectItem value="1000">1000 جرام</SelectItem>
-                        <SelectItem value="250">250 جرام</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

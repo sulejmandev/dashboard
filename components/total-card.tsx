@@ -10,7 +10,7 @@ interface TotalCardType {
   title: string;
   name: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  total: string;
+  total: number;
 }
 
 export function TotalCard({ title, name, icon, total }: TotalCardType) {

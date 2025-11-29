@@ -18,13 +18,22 @@ export async function GET(req: Request) {
 
   const products = await Product.find().skip(skip).limit(limit);
 
-  return Response.json({
-    total,
-    page,
-    limit,
-    totalPages: Math.ceil(total / limit),
-    products,
-  });
+  return Response.json(
+    {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      products,
+    },
+    {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    }
+  );
 }
 
 // create a product fun

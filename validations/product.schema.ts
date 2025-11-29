@@ -8,7 +8,6 @@ export const productSchema = z.object({
   price: z.string().min(1, 'السعر مطلوب'),
   oldPrice: z.string().optional(),
   offer: z.string().optional(),
-  weight: z.enum(['500', '1000', '250']),
   category: z.enum([
     'العروض',
     'العسل العضوي',

@@ -7,8 +7,10 @@ import getAllProducts from '@/hooks/getAllProducts';
 import Image from 'next/image';
 import ProductSkeleton from './product-skeleton';
 import { ProductType } from '@/types/productType';
-import { DeleteProduct } from './delete-product';
+
 import { Button } from './ui/button';
+import Link from 'next/link';
+import { DeleteButton } from './delete-botton';
 
 export default async function ProductCard() {
   const { products } = await getAllProducts();
@@ -67,13 +69,15 @@ export default async function ProductCard() {
                 </div>
 
                 <div className="mt-3 flex items-center gap-2">
-                  <Button variant="outline">عرض المنتج</Button>
+                  <Button variant="outline">
+                    <Link href={`/products/${product.slug}`}>عرض المنتج</Link>
+                  </Button>
 
                   {/* <button className="px-3 py-1.5 text-sm rounded-md bg-red-500/10 text-red-600 hover:bg-red-500/20 transition">
                     حذف
                   </button> */}
 
-                  <DeleteProduct id={product._id} />
+                  <DeleteButton id={product._id}>حذف</DeleteButton>
                 </div>
               </CardContent>
             </Card>

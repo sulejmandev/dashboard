@@ -12,18 +12,31 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import deleteProduct from '@/hooks/deleteProduct';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
 import { toast } from 'sonner';
 
 interface DeleteProductProps {
   id: string;
+  children: React.ReactNode;
+  callback?: string | undefined;
 }
 
-export function DeleteProduct({ id }: DeleteProductProps) {
+export function DeleteButton({ id, children, callback }: DeleteProductProps) {
+  const router = useRouter();
+
   const handleDelete = async () => {
     try {
       await deleteProduct(id);
       toast.success('تم حذف المنتج بنجاح');
-      window.location.reload();
+
+      if (callback) {
+        router.replace(`${callback}`);
+        router.refresh();
+      } else {
+        router.refresh();
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -36,7 +49,7 @@ export function DeleteProduct({ id }: DeleteProductProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">حذف</Button>
+        <Button variant="destructive">{children}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
