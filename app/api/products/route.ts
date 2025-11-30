@@ -35,18 +35,19 @@ export async function GET(req: Request) {
   );
 }
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'https://dashboard-pups.vercel.app',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export function OPTIONS() {
   return new Response(null, {
     status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
+    headers: corsHeaders,
   });
 }
 
-// create a product fun
 export async function POST(req: Request) {
   try {
     await connectDB();
@@ -60,23 +61,13 @@ export async function POST(req: Request) {
     });
 
     return Response.json(
-      {
-        status: 'success',
-        product,
-      },
-      {
-        status: 201,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://dashboard-pups.vercel.app',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      }
+      { status: 'success', product },
+      { status: 201, headers: corsHeaders }
     );
   } catch (error: any) {
     console.error('CREATE PRODUCT ERROR:', error);
 
-    // 🔥 خطأ Zod (Validation)
+    // Validation Error
     if (error.name === 'ZodError') {
       return Response.json(
         {
@@ -84,18 +75,29 @@ export async function POST(req: Request) {
           message: 'بيانات غير صالحة',
           errors: error.errors,
         },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
-    // 🔥 أخطاء أخرى
+    // Duplicate key (اسم المنتج موجود مسبقاً)
+    if (error.code === 11000) {
+      return Response.json(
+        {
+          status: 'error',
+          message: 'هذا المنتج موجود مسبقًا',
+        },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // أي خطأ آخر
     return Response.json(
       {
         status: 'error',
         message: 'فشل في إنشاء المنتج',
         error: error.message,
       },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

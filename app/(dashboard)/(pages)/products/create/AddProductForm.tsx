@@ -57,16 +57,19 @@ export default function AddProductForm() {
 
     // 👈 رفع الصورة فقط عند Submit
     if (files && files.length > 0) {
-      const res = await startUpload(files);
-      if (res && res[0]?.ufsUrl) {
-        imageUrl = res[0].ufsUrl;
-        form.setValue('img', imageUrl as ProductType['img']);
+      const resUpload = await startUpload(files);
+      if (!resUpload || !resUpload[0]?.ufsUrl) {
+        toast.error('فشل رفع الصورة');
+        setOpenDialog(false);
+        return;
       }
+      imageUrl = resUpload[0].ufsUrl;
     }
 
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_API_PRODUCTS_URL!, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -78,8 +81,9 @@ export default function AddProductForm() {
       });
 
       if (!res.ok) {
+        const err = await res.json().catch(() => null);
         console.error('Error:', await res.text());
-        toast('حدث خطأ أثناء الرفع');
+        toast.error(err?.message || 'حدث خطأ أثناء الرفع');
         setOpenDialog(false);
         return;
       }
@@ -99,7 +103,7 @@ export default function AddProductForm() {
       setFiles(null);
       setFilePreview(undefined);
       form.reset();
-      window.location.reload();
+      router.refresh();
 
       // catch errors
     } catch (error) {

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import BuyersTable from '@/components/buyer-table';
 import { ProductCarousel } from '@/components/product-carousel';
 import { TotalCard } from '@/components/total-card';
