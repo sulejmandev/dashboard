@@ -27,18 +27,18 @@ export default async function ProductsPage(props: {
   }
 
   return (
-    <div className="max-w-(--breakpoint-xl) mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row gap-12">
-      {/* product card */}
-      <ProductCard
-        products={products}
-        page={page}
-        totalPages={totalPages}
-        isLoading={false}
-      />
+    <div className="max-w-(--breakpoint-xl) mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row items-start gap-12">
+      <div>
+        {/* product card */}
+        <ProductCard
+          products={products}
+          page={page}
+          totalPages={totalPages}
+          isLoading={false}
+        />
+      </div>
       {/* category side */}
       <CategoriesItem />
-
-      {/* pagination */}
     </div>
   );
 }
