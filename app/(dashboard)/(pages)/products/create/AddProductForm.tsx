@@ -82,7 +82,6 @@ export default function AddProductForm() {
 
       if (!res.ok) {
         const err = await res.json().catch(() => null);
-        console.error('Error:', await res.text());
         toast.error(err?.message || 'حدث خطأ أثناء الرفع');
         setOpenDialog(false);
         return;
@@ -107,7 +106,10 @@ export default function AddProductForm() {
 
       // catch errors
     } catch (error) {
-      toast('حدث خطأ اثناء الرفع', { description: (error as Error).message });
+      const message = error instanceof Error ? error.message : String(error);
+      toast(message || 'حدث خطأ اثناء الرفع', {
+        description: message,
+      });
       setOpenDialog(false);
     }
   };
