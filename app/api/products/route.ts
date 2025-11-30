@@ -13,17 +13,22 @@ export async function GET(req: Request) {
 
   const skip = (page - 1) * limit;
 
+  // 1) Count total documents
   const total = await Product.countDocuments();
 
-  const products = await Product.find().skip(skip).limit(limit);
+  // 2) Fetch paginated products
+  const products = await Product.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 }); // ترتيب تنازلي (اختياري)
 
   return Response.json(
     {
+      products,
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
-      products,
     },
     {
       headers: {

@@ -14,9 +14,21 @@ export default async function getAllProducts(
       throw new Error(`HTTP Error: ${res.status}`);
     }
 
-    return await res.json();
+    const data = await res.json();
+
+    return {
+      products: data.products || [],
+      total: data.total || 0,
+      totalPages: data.totalPages || 1,
+      currentPage: page,
+    };
   } catch (error) {
     console.error('❌ Error fetching products:', error);
-    return { products: [], total: 0 };
+    return {
+      products: [],
+      total: 0,
+      totalPages: 1,
+      currentPage: 1,
+    };
   }
 }

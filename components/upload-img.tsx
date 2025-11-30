@@ -7,29 +7,51 @@ import {
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { Trash } from 'lucide-react';
+import { CheckCircle, Trash, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { useUploadThing } from '@/lib/uploadthing';
+import { Progress } from '@/components/ui/progress';
 
-interface Props {
-  // 👈 بدل ما نبعث URL، راح نبعث الملفات للأب
-  onUploaded: (files: File[] | null) => void;
+interface UploadImgProps {
+  onUploaded: (url: string | null) => void;
   filePreview: string | undefined;
   setFilePreview: (preview: string | undefined) => void;
 }
 
-const UploadImg: React.FC<Props> = ({
+const UploadImg: React.FC<UploadImgProps> = ({
   onUploaded,
   filePreview,
   setFilePreview,
 }) => {
   const [files, setFiles] = useState<File[] | undefined>();
+  const [progress, setProgress] = useState(0);
 
-  const handleDrop = (newFiles: File[]) => {
+  const { size, name } = files?.[0] || { size: 0, name: '' };
+
+  const sizeInKB = (size / 1024).toFixed();
+  const sizeInMB = (size / (1024 * 1024)).toFixed(2);
+
+  const [uploading, setUploading] = useState(false);
+
+  const { startUpload } = useUploadThing('imageUploader', {
+    uploadProgressGranularity: 'fine',
+
+    onUploadProgress: (p) => {
+      setUploading(true);
+      setProgress(p);
+    },
+    onClientUploadComplete: () => {
+      setUploading(false);
+      setProgress(0);
+    },
+  });
+
+  const handleDrop = async (newFiles: File[]) => {
     setFiles(newFiles);
-    onUploaded(newFiles); // 👈 نرسل الملفات للأب
 
-    // preview زي ما هو
+    // Preview
     if (newFiles.length > 0) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -39,12 +61,26 @@ const UploadImg: React.FC<Props> = ({
       };
       reader.readAsDataURL(newFiles[0]);
     }
+
+    // رفع مباشر
+    setUploading(true);
+    const resUpload = await startUpload(newFiles);
+    setUploading(false);
+
+    if (!resUpload || !resUpload[0]?.ufsUrl) {
+      toast.error('فشل رفع الصورة');
+      onUploaded(null);
+      return;
+    }
+
+    // نعيد رابط الصورة
+    onUploaded(resUpload[0].ufsUrl);
   };
 
   const cancelFile = () => {
     setFiles(undefined);
     setFilePreview(undefined);
-    onUploaded(null); // 👈 ما في ملفات
+    onUploaded(null);
   };
 
   return (
@@ -60,7 +96,6 @@ const UploadImg: React.FC<Props> = ({
               </Button>
             )}
           </div>
-
           {/* Large Preview */}
           <div className="w-full aspect-square rounded-xl bg-muted flex items-center justify-center overflow-hidden">
             <Dropzone
@@ -85,6 +120,33 @@ const UploadImg: React.FC<Props> = ({
                 )}
               </DropzoneContent>
             </Dropzone>
+          </div>
+
+          <div>
+            {uploading && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {progress < 100 ? name : 'Upload complete!'}
+                  </span>
+                  <span className="font-medium">{progress}%</span>
+                </div>
+                <Progress value={progress} className="w-full" />
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>
+                    {size < 1024 ? `${sizeInKB} KB` : `${sizeInMB} MB`}
+                  </span>
+                  {progress < 100 ? (
+                    <Button variant="ghost" size="sm" className="h-6 px-2">
+                      <X className="h-3 w-3" />
+                      Cancel
+                    </Button>
+                  ) : (
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

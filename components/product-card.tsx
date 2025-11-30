@@ -3,20 +3,34 @@ export const dynamic = 'force-dynamic';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Banknote, Weight } from 'lucide-react';
-import getAllProducts from '@/hooks/getAllProducts';
 import Image from 'next/image';
 import ProductSkeleton from './product-skeleton';
 import { ProductType } from '@/types/productType';
-
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { DeleteButton } from './delete-botton';
 
-export default async function ProductCard() {
-  const { products } = await getAllProducts();
+// shadcn pagination
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from '@/components/ui/pagination';
 
-  const isLoading = !products;
-
+export default function ProductCard({
+  products,
+  page,
+  totalPages,
+  isLoading,
+}: {
+  products: ProductType[];
+  page: number;
+  totalPages: number;
+  isLoading: boolean;
+}) {
   return (
     <div className="flex-1 min-w-0">
       <div className="space-y-12">
@@ -28,7 +42,7 @@ export default async function ProductCard() {
         {!isLoading &&
           products.map((product: ProductType) => (
             <Card
-              key={product.name}
+              key={product._id}
               className="flex flex-col sm:flex-row shadow-none overflow-hidden rounded-md border-none py-0"
             >
               {/* الصورة */}
@@ -62,6 +76,11 @@ export default async function ProductCard() {
                 <div className="mt-4 flex items-center gap-6 text-muted-foreground text-sm font-medium">
                   <div className="flex items-center gap-2">
                     <Banknote className="h-4 w-4" /> د.ك. {product.price}
+                    {product.oldPrice && (
+                      <span className="line-through">
+                        د.ك. {product.oldPrice}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Weight className="h-4 w-4" /> {product.weight} جرام
@@ -69,13 +88,9 @@ export default async function ProductCard() {
                 </div>
 
                 <div className="mt-3 flex items-center gap-2">
-                  <Button variant="outline">
+                  <Button variant="outline" asChild>
                     <Link href={`/products/${product.slug}`}>عرض المنتج</Link>
                   </Button>
-
-                  {/* <button className="px-3 py-1.5 text-sm rounded-md bg-red-500/10 text-red-600 hover:bg-red-500/20 transition">
-                    حذف
-                  </button> */}
 
                   <DeleteButton id={product._id}>حذف</DeleteButton>
                 </div>
@@ -83,6 +98,39 @@ export default async function ProductCard() {
             </Card>
           ))}
       </div>
+
+      {/* ---------------- PAGINATION ---------------- */}
+      {!isLoading && totalPages > 1 && (
+        <div className="mt-10 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href={`?page=${page > 1 ? page - 1 : 1}`} />
+              </PaginationItem>
+
+              {Array.from({ length: totalPages }, (_, i) => {
+                const pageNum = i + 1;
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink
+                      href={`?page=${pageNum}`}
+                      isActive={pageNum === page}
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              <PaginationItem>
+                <PaginationNext
+                  href={`?page=${page < totalPages ? page + 1 : totalPages}`}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

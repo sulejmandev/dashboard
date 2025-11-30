@@ -35,8 +35,23 @@ export default async function ProductPage({
             <h1 className="text-2xl font-bold md:text-3xl">{data.name}</h1>
 
             <div className="sm:flex sm:items-center sm:gap-4">
-              <span className="text-xl font-semibold sm:text-2xl">د.ك.</span>
-              <p className="text-xl font-semibold sm:text-2xl">{data.price}</p>
+              <div className="flex gap-2">
+                <span className="text-xl font-semibold sm:text-2xl">د.ك.</span>
+                <p className="text-xl font-semibold sm:text-2xl">
+                  {data.price}
+                </p>
+              </div>
+
+              {data.oldPrice && (
+                <div className="flex gap-2 line-through">
+                  <span className="text-xl font-semibold sm:text-2xl">
+                    د.ك.
+                  </span>
+                  <p className="text-xl font-semibold sm:text-2xl">
+                    {data.oldPrice}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

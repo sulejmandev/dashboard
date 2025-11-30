@@ -14,4 +14,6 @@ export type ProductType = {
 export type ProductsResponse = {
   products: ProductType[];
   total: number;
+  totalPages: number;
+  currentPage: number;
 };

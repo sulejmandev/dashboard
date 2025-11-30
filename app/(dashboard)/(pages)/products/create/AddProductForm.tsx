@@ -30,52 +30,37 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import UploadImg from '@/components/upload-img';
-import { useUploadThing } from '@/lib/uploadthing';
 
 export default function AddProductForm() {
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
   });
 
-  // 👇 نخزن الملفات اللي اخترناها من UploadImg
-  const [files, setFiles] = useState<File[] | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [filePreview, setFilePreview] = useState<string | undefined>(undefined);
-
-  const { startUpload } = useUploadThing('imageUploader');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [filePreview, setFilePreview] = useState<string | undefined>();
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!imageUrl) {
+      toast.error('يجب رفع صورة قبل إضافة المنتج');
+      return;
+    }
+
     setOpenDialog(true);
 
     const data = form.getValues();
 
-    let imageUrl = '';
-
-    // 👈 رفع الصورة فقط عند Submit
-    if (files && files.length > 0) {
-      const resUpload = await startUpload(files);
-      if (!resUpload || !resUpload[0]?.ufsUrl) {
-        toast.error('فشل رفع الصورة');
-        setOpenDialog(false);
-        return;
-      }
-      imageUrl = resUpload[0].ufsUrl;
-    }
-
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_API_PRODUCTS_URL!, {
         method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
-          img: imageUrl,
+          img: imageUrl, // رابط جاهز
           slug: ArSlug(data.name),
         }),
       });
@@ -87,33 +72,16 @@ export default function AddProductForm() {
         return;
       }
 
-      await res.json();
-      toast('تم الرفع بنجاح', {
-        description: `تم إضافة المنتج ${data.name}`,
-        action: {
-          label: 'عرض المنتجات',
-          onClick: () => {
-            router.push('/products');
-          },
-        },
-      });
-
-      setTimeout(() => setOpenDialog(false), 700);
-      setFiles(null);
-      setFilePreview(undefined);
-      form.reset();
-      router.refresh();
-
-      // catch errors
+      toast.success('تم الرفع بنجاح!');
+      router.push('/products');
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      toast(message || 'حدث خطأ اثناء الرفع', {
-        description: message,
+      toast.error('حدث خطأ', {
+        description: String(error),
       });
+    } finally {
       setOpenDialog(false);
     }
   };
-
   return (
     <div dir="rtl" className="w-full">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -154,6 +122,7 @@ export default function AddProductForm() {
                   <Input
                     {...form.register('name')}
                     className="h-12"
+                    name="name"
                     placeholder="مثال: عسل السدر الفاخر"
                     required
                   />
@@ -165,6 +134,7 @@ export default function AddProductForm() {
                   <Textarea
                     {...form.register('description')}
                     className="min-h-[130px]"
+                    name="description"
                     placeholder="أكتب وصف للمنتج..."
                     required
                   />
@@ -184,6 +154,7 @@ export default function AddProductForm() {
                     <Input
                       {...form.register('price')}
                       className="h-12"
+                      name="price"
                       placeholder="25.00"
                       required
                     />
@@ -195,6 +166,7 @@ export default function AddProductForm() {
                     <Input
                       {...form.register('oldPrice')}
                       className="h-12"
+                      name="oldPrice"
                       placeholder="30.00"
                     />
                   </div>
@@ -205,6 +177,7 @@ export default function AddProductForm() {
                     <Input
                       {...form.register('offer')}
                       className="h-12"
+                      name="offer"
                       placeholder="خصم 20%"
                     />
                   </div>
@@ -252,9 +225,7 @@ export default function AddProductForm() {
 
           {/* =================== RIGHT SIDE (IMAGE) =================== */}
           <UploadImg
-            onUploaded={(files) => {
-              setFiles(files);
-            }}
+            onUploaded={(url) => setImageUrl(url)}
             filePreview={filePreview}
             setFilePreview={setFilePreview}
           />
