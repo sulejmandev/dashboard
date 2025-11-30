@@ -1,7 +1,6 @@
 import { connectDB } from '@/lib/DB';
 import { Product } from '@/models/Product';
 import { productSchema } from '@/validations/product.schema';
-import { NextResponse } from 'next/server';
 
 // get all products fun
 export async function GET(req: Request) {
@@ -36,6 +35,17 @@ export async function GET(req: Request) {
   );
 }
 
+export function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 // create a product fun
 export async function POST(req: Request) {
   try {
@@ -49,19 +59,26 @@ export async function POST(req: Request) {
       createdAt: new Date(),
     });
 
-    return NextResponse.json(
+    return Response.json(
       {
         status: 'success',
         product,
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          'Access-Control-Allow-Origin': 'https://dashboard-pups.vercel.app/',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
     );
   } catch (error: any) {
     console.error('CREATE PRODUCT ERROR:', error);
 
     // 🔥 خطأ Zod (Validation)
     if (error.name === 'ZodError') {
-      return NextResponse.json(
+      return Response.json(
         {
           status: 'error',
           message: 'بيانات غير صالحة',
@@ -72,7 +89,7 @@ export async function POST(req: Request) {
     }
 
     // 🔥 أخطاء أخرى
-    return NextResponse.json(
+    return Response.json(
       {
         status: 'error',
         message: 'فشل في إنشاء المنتج',
