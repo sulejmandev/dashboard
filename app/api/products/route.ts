@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       {
         status: 201,
         headers: {
-          'Access-Control-Allow-Origin': 'https://dashboard-pups.vercel.app/',
+          'Access-Control-Allow-Origin': 'https://dashboard-pups.vercel.app',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
