@@ -6,7 +6,7 @@ export type ProductType = {
   img: string;
   price: number;
   oldPrice?: number;
-  offer?: number;
+  offer?: string;
   weight?: string[];
   category: string;
 };

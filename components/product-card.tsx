@@ -64,9 +64,16 @@ export default function ProductCard({
                     </Badge>
                   </div>
 
-                  <h3 className="mt-4 text-xl font-semibold tracking-tight text-end">
-                    {product.name}
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    {product.offer && (
+                      <span className="mt-4 text-sm text-white bg-[#ED1414] px-2 py-0.5 rounded-md">
+                        {product.offer}
+                      </span>
+                    )}
+                    <h3 className="mt-4 text-xl font-semibold tracking-tight">
+                      {product.name}
+                    </h3>
+                  </div>
                 </div>
 
                 <p className="text-muted-foreground line-clamp-3 max-w-[340px] xl:max-w-full text-end">

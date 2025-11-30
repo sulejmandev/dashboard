@@ -35,6 +35,12 @@ export default async function ProductPage({
             <h1 className="text-2xl font-bold md:text-3xl">{data.name}</h1>
 
             <div className="sm:flex sm:items-center sm:gap-4">
+              {data.offer && (
+                <span className="text-sm text-white bg-[#ED1414] px-2 py-0.5 rounded-md">
+                  {data.offer}
+                </span>
+              )}
+
               <div className="flex gap-2">
                 <span className="text-xl font-semibold sm:text-2xl">د.ك.</span>
                 <p className="text-xl font-semibold sm:text-2xl">
