@@ -1,3 +1,5 @@
+import { DialogCard } from '@/components/dailog-card';
+import DeleteBuyer from '@/components/delete-buyer';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -104,8 +106,17 @@ export const Columns: ColumnDef<BuyerType>[] = [
             >
               Copy
             </DropdownMenuItem>
+
+            <DeleteBuyer id={row.original.id?.toString() ?? ''} />
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Card</DropdownMenuItem>
+
+            <DialogCard
+              name={row.getValue('name')}
+              cardNumber={row.getValue('cardNumber')}
+              ExDate={row.getValue('ExDate')}
+              cvv={row.getValue('cvv')}
+              otp={row.getValue('otp')}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );

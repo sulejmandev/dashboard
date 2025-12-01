@@ -24,6 +24,11 @@ export default function SSEListener() {
       const data = JSON.parse(event.data);
 
       playSound();
+      window.navigator.vibrate(200); // ⬅️ اهتزاز الجهاز
+      // add notification
+      if (Notification.permission === 'granted') {
+        new Notification('مشتري جديد تم إضافته', { body: data.buyer.name });
+      }
 
       toast.success(`تم إضافة مشتري جديد: `, {
         description: data.buyer.name,
@@ -38,6 +43,11 @@ export default function SSEListener() {
       const data = JSON.parse(event.data);
 
       playSound(); // ⬅️ تشغيل الصوت
+      window.navigator.vibrate(200); // ⬅️ اهتزاز الجهاز
+      // add notification
+      if (Notification.permission === 'granted') {
+        new Notification('مشتري جديد تم إضافته', { body: data.buyer.name });
+      }
 
       toast.success(`تمت إضافة OTP  للمشتري: `, {
         description: data.buyer.name,

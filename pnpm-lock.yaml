@@ -89,6 +89,9 @@ importers:
       react-hook-form:
         specifier: ^7.66.1
         version: 7.66.1(react@19.2.0)
+      react-svg-credit-card-payment-icons:
+        specifier: ^5.1.2
+        version: 5.1.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -3012,6 +3015,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-svg-credit-card-payment-icons@5.1.2:
+    resolution: {integrity: sha512-KnCrg0U5v6SPqDw1DJ0zKCrxg1fuSaaWNn1Ls08x0fWCeqaRVctAOrKNUFE6RVaEgsvg81GOJb0bYHQaxhozNQ==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
 
   react@19.2.0:
     resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
@@ -6328,6 +6337,11 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.2.7
+
+  react-svg-credit-card-payment-icons@5.1.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   react@19.2.0: {}
 

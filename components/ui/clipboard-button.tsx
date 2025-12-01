@@ -11,6 +11,7 @@ interface ClipboardButtonProps extends React.ComponentProps<'button'> {
 }
 
 export function ClipboardButton({
+  label = '',
   value = '',
   ...props
 }: ClipboardButtonProps) {
@@ -25,7 +26,7 @@ export function ClipboardButton({
     await navigator.clipboard.writeText(value);
 
     setCopied(true);
-    toast.success('تم النسخ');
+    toast.success(`تم نسخ ${label}`);
 
     setTimeout(() => setCopied(false), 1200);
   }

@@ -3,7 +3,7 @@ import getServer from '@/lib/getServer';
 import { Buyer } from '@/models/Buyer';
 
 export type BuyerType = {
-  id: string;
+  id?: { toString(): string };
   name: string;
   cardNumber: string;
   ExDate: string;
