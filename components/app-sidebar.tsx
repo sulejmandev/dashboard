@@ -48,6 +48,17 @@ const data = {
         },
       ],
     },
+    {
+      title: 'Users',
+      url: '#',
+      icon: Users,
+      items: [
+        {
+          title: 'User List',
+          url: '/users',
+        },
+      ],
+    },
   ],
 };
 

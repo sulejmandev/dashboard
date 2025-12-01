@@ -71,21 +71,16 @@ export const Columns: ColumnDef<BuyerType>[] = [
     header: () => <div className="text-right">CVV</div>,
     cell: ({ row }) => {
       const cvv = parseFloat(row.getValue('cvv'));
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US').format(cvv);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="text-right font-medium">{cvv}</div>;
     },
   },
   {
-    accessorKey: 'opt',
-    header: () => <div className="text-right">OPT</div>,
+    accessorKey: 'otp',
+    header: () => <div className="text-right">OTP</div>,
     cell: ({ row }) => {
-      const opt = parseFloat(row.getValue('opt') || '0');
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat('en-US').format(opt);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return (
+        <div className="text-right font-medium">{row.getValue('otp')}</div>
+      );
     },
   },
   {
