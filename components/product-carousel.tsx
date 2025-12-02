@@ -62,7 +62,9 @@ export async function ProductCarousel() {
                       {product.name}
                     </h3>
                     <div className="mt-6 flex items-center justify-between">
-                      <Button variant="outline">عرض</Button>
+                      <Button variant="outline">
+                        <Link href={`/products/${product.slug}`}>عرض</Link>
+                      </Button>
 
                       <span className="text-muted-foreground text-sm">
                         د.ك. {product.price}

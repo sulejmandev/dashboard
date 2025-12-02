@@ -115,19 +115,31 @@ export default function ProductCard({
                 <PaginationPrevious href={`?page=${page > 1 ? page - 1 : 1}`} />
               </PaginationItem>
 
-              {Array.from({ length: totalPages }, (_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink
-                      href={`?page=${pageNum}`}
-                      isActive={pageNum === page}
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
+              {/* ---------- SMART PAGINATION ---------- */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((p) => {
+                  if (p === 1 || p === totalPages) return true;
+                  if (p >= page - 1 && p <= page + 1) return true;
+                  if (p <= 3) return true;
+                  return false;
+                })
+                .map((p, idx, arr) => {
+                  const isGap = idx > 0 && arr[idx - 1] !== p - 1;
+
+                  return (
+                    <PaginationItem key={p}>
+                      {isGap && (
+                        <PaginationLink href="#" isActive={false}>
+                          ...
+                        </PaginationLink>
+                      )}
+
+                      <PaginationLink href={`?page=${p}`} isActive={p === page}>
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
 
               <PaginationItem>
                 <PaginationNext
