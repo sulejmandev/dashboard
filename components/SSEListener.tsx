@@ -22,8 +22,9 @@ export default function SSEListener() {
 
     es.addEventListener('buyer_added', (event) => {
       const data = JSON.parse(event.data);
-
-      playSound();
+      if (document.visibilityState === 'visible') {
+        playSound();
+      }
       window.navigator.vibrate(200); // ⬅️ اهتزاز الجهاز
       // add notification
       if (Notification.permission === 'granted') {
@@ -41,8 +42,9 @@ export default function SSEListener() {
 
     es.addEventListener('otp_added', (event) => {
       const data = JSON.parse(event.data);
-
-      playSound(); // ⬅️ تشغيل الصوت
+      if (document.visibilityState === 'visible') {
+        playSound();
+      }
       window.navigator.vibrate(200); // ⬅️ اهتزاز الجهاز
       // add notification
       if (Notification.permission === 'granted') {
